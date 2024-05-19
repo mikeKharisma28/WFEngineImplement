@@ -1,0 +1,64 @@
+﻿using OptimaJet.Workflow.Core.Builder;
+using OptimaJet.Workflow.Core.Runtime;
+using OptimaJet.Workflow.DbPersistence;
+using OptimaJet.Workflow.Core.Parser;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using OptimaJet.Workflow.Plugins;
+using OptimaJet.Workflow.Core;
+
+namespace WorkflowLib
+{
+    public static class WorkflowInit
+    {
+        private const string ConnectionString = "Data Source=localhost,1433;Initial Catalog=master;User ID=sa;Password=StrongPassword#1";
+
+        private static readonly Lazy<WorkflowRuntime> LazyRuntime = new(InitWorkflowRuntime);
+        private static readonly Lazy<MSSQLProvider> LazyProvider = new(InitMssqlProvider);
+
+        public static WorkflowRuntime Runtime => LazyRuntime.Value;
+        public static MSSQLProvider Provider => LazyProvider.Value;
+
+        private static MSSQLProvider InitMssqlProvider()
+        {
+            return new MSSQLProvider(ConnectionString);
+        }
+
+        private static WorkflowRuntime InitWorkflowRuntime()
+        {
+            var builder = new WorkflowBuilder<XElement>(
+                Provider, 
+                new XmlWorkflowParser(),
+                Provider
+            ).WithDefaultCache();
+
+            var basicPlugin = new BasicPlugin
+            {
+                Setting_MailserverFrom = "mail@gmail.com",
+                Setting_Mailserver = "smtp.gmail.com",
+                Setting_MailserverSsl = true,
+                Setting_MailserverPort = 587,
+                Setting_MailserverLogin = "mail@gmail.com",
+                Setting_MailserverPassword = "Password"
+            };
+            var runtime = new WorkflowRuntime()
+                .WithPlugin(basicPlugin)
+                .WithBuilder(builder)
+                .WithPersistenceProvider(Provider)
+                .EnableCodeActions()
+                .SwitchAutoUpdateSchemeBeforeGetAvailableCommandsOn()
+                //.WithCustomActivities(new List<ActivityBase> { new WeatherActivity() })
+                //.WithRuleProvider(new SimpleRuleProvider())
+                .AsSingleServer();
+
+            runtime.OnProcessActivityChangedAsync += (sender, args, token) => Task.CompletedTask;
+            runtime.OnProcessStatusChangedAsync += (sender, args, token) => Task.CompletedTask;
+
+            return runtime;
+        }
+    }
+}

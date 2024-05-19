@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="WorkflowInit.cs.backup" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="WorkflowInit.cs.backup" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WorkflowEngine.NETCore-Core" Version="13.1.0" />
+    <PackageReference Include="WorkflowEngine.NETCore-ProviderForMSSQL" Version="13.1.0" />
+  </ItemGroup>
+
+</Project>
