@@ -6,13 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <None Remove="WorkflowInit.cs.backup" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="WorkflowInit.cs.backup" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <PackageReference Include="WorkflowEngine.NETCore-Core" Version="13.1.0" />
