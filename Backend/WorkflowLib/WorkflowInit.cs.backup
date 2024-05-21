@@ -15,7 +15,8 @@ namespace WorkflowLib
 {
     public static class WorkflowInit
     {
-        private const string ConnectionString = "Data Source=localhost,1433;Initial Catalog=master;User ID=sa;Password=StrongPassword#1";
+        // Change the settings to your choosing
+        private const string ConnectionString = "Data Source=localhost,1434;Encrypt=false;Initial Catalog=WorkflowEngineDB;User ID=sa;Password=StrongPassword#1";
 
         private static readonly Lazy<WorkflowRuntime> LazyRuntime = new(InitWorkflowRuntime);
         private static readonly Lazy<MSSQLProvider> LazyProvider = new(InitMssqlProvider);
@@ -30,20 +31,23 @@ namespace WorkflowLib
 
         private static WorkflowRuntime InitWorkflowRuntime()
         {
+            //WorkflowRuntime.RegisterLicense("your license key text");
+            
             var builder = new WorkflowBuilder<XElement>(
                 Provider, 
                 new XmlWorkflowParser(),
                 Provider
             ).WithDefaultCache();
 
+            // Change the credential settings to your choosing
             var basicPlugin = new BasicPlugin
             {
                 Setting_MailserverFrom = "mail@gmail.com",
                 Setting_Mailserver = "smtp.gmail.com",
                 Setting_MailserverSsl = true,
                 Setting_MailserverPort = 587,
-                Setting_MailserverLogin = "mail@gmail.com",
-                Setting_MailserverPassword = "Password"
+                Setting_MailserverLogin = "",
+                Setting_MailserverPassword = ""
             };
             var runtime = new WorkflowRuntime()
                 .WithPlugin(basicPlugin)
